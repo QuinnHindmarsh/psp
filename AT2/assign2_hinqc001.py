@@ -12,6 +12,10 @@
 
 import blackjack
  
+'''     TO-DO'''
+#fix display playter (stage 2)
+#validate player names in interactive mode
+
 
 """                Functions                """
 
@@ -76,15 +80,12 @@ def display_players(player_list):
     print('-                             P  W  L  D   Chips   Score  -')
     print('-----------------------------------------------------------')
     for player in player_list:
-        print(
-            f"{player[0]:<29} {player[1]:<2} {player[2]:<2} {player[3]:<2} {player[4]:<3} {player[5]:<10} {player[6]:<} ")
+        print(f"{player[0]:<29} {player[1]:<2} {player[2]:<2} {player[3]:<2} {player[4]:<3} {player[5]:<10} {player[6]} ")
 
         print('-----------------------------------------------------------')
     print('===========================================================')
 
 
-player_list = read_file("players.txt")
-display_players(player_list)
 
 #takes plater name and list of players and returns the index of that player (returns -1 if not found)
 def find_player(player_list, name):
@@ -124,6 +125,38 @@ def sort_by_chips (player_list):
     pass
 
 
+"""                Functions other then the required 10                """
+
+#allows the user to navigate through the program
+def interactive_mode():
+    done = False
+    while not done:
+        done = True
+        u_input = str(input('please enter choice \n[list, buy, search, high, add, remove, play, chips, quit]: ')).lower()
+
+        if u_input == 'list':
+            display_players(player_list)
+        elif u_input == 'buy':
+            buy_player_chips(player_list, input('please enter player name: '))
+        elif u_input == 'search':
+            find_player(player_list, input('please enter player name: '))
+        elif u_input == 'high':
+            display_highest_chip_holder(player_list)
+        elif u_input == 'add':
+            add_player(player_list, input('please enter player name: '))
+        elif u_input == 'remove':
+            remove_player(player_list, input('please enter player name: '))
+        elif u_input == 'play':
+            play_blackjack_games(player_list, input('please enter player name: '))
+        elif u_input == 'chips':
+            sort_by_chips(player_list)
+        elif u_input == 'quit':
+            pass
+            write_to_file("players.txt", player_list)
+        else:
+            print('invalid input\n')
+            done = False
+
 
 
 """                lists                """
@@ -133,6 +166,7 @@ player_list = []
 """                main code                """
 
 player_list = read_file("players.txt")
+interactive_mode()
 
 
 
