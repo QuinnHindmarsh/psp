@@ -1,21 +1,24 @@
 #
 # File:  assign2_hinqc001.py
 # Author: Quinn Hindmarsh
-# Email Id: hinqc001@mymail.unisa.edu.au
+# Email ID: hinqc001@mymail.unisa.edu.au
 # Description: assesment task 2 for PSP - blackjack
 # This is my own work as defined by the University's
 # Academic Misconduct policy.
 #
+print('File      : assign2_hinqc001.py')
+print('Author    : Quinn Hindmarsh')
+print('Stud ID   : 110445614')
+print('Email ID  : hinqc001')
+print("This is my own work as defined by the University's Academic Misconduct Policy.\n")
 
 """                assumptions                """
-#any assumptions i made during the development of the code are listed here
+#any assumptions I made during the development of the code are listed here
 
 import blackjack
  
 '''     TO-DO'''
-#fix display playter (stage 2)
-#validate player names in interactive mode
-#check index for output is correct
+#fix display player (stage 2)
 
 
 """                Functions                """
@@ -85,6 +88,7 @@ def display_players(player_list):
 
         print('-----------------------------------------------------------')
     print('===========================================================')
+    print()
 
 
 
@@ -104,14 +108,15 @@ def buy_player_chips(player_list, name):
         print('Sorry that player does not exist\n')
         return -1
 
+    print(f'{name} currently has {player_list[index][5]} chips\n')
     done = False
     while not done:
-        chips = int(input('Please enter the number of chips you would like to buy (1-100): '))
+        chips = int(input('How many chips would you like to buy?'))
         if chips < 1 or chips > 100:
-            print('Invalid input, please enter a number between 1 and 100')
+            print('You may only buy between 1 and 100 chips at a time\n')
         else:
             player_list[index][5] += chips
-            print(f'{name} has bought {chips} chips')
+            print(f"Succsessfully updated {name}'s chip balance to {player_list[index][5]}\n")
             done = True
 
 
@@ -192,6 +197,9 @@ def play_blackjack_games(player_list, player_pos):
 
 
         play = input('Play again [Y|N]?')
+        if play.lower() != 'y' and play.lower() != 'n':
+            print('Invalid input, please enter Y or N')
+            play = input('Play again [Y|N]?')
 
 
 #returrns a copy of player list in desecnding order of chip balance
@@ -230,9 +238,10 @@ player_list = read_file("players.txt")
 done = False
 while not done:
     #done = True
-    u_input = str(input('please enter choice \n[list, buy, search, high, add, remove, play, chips, quit]: ')).lower()
+    u_input = str(input('\nplease enter choice \n[list, buy, search, high, add, remove, play, chips, quit]: ')).lower()
 
     if u_input == 'list':
+        print()
         display_players(player_list)
 
     elif u_input == 'buy':
@@ -262,9 +271,10 @@ while not done:
 
 
     elif u_input == 'play':
-        index = find_player(player_list, input('please enter player name: '))
+        player_name = input('please enter player name: ')
+        index = find_player(player_list, player_name)
         if index == -1:
-            print('Sorry that player does not exist')
+            print(f'{player_name} is not found in player list.\n')
         else:
             play_blackjack_games(player_list, index)
 
@@ -279,38 +289,12 @@ while not done:
         write_to_file("players.txt", player_list)
 
     else:
-        print('invalid input\n')
+        print('\n Not a valid command - please try again\n')
         #done = False
 
 
 
 
-
-
-"""                Code for Development purposes only                """
-"""
-### you will remove some of the following code as it's been included for development purposes only...  : )
-
-# Display player list to the screen to ensure read_file is working correctly
-for player in player_list:
-    print(player)
-
-    
-no_chips = 100
-game_result = 0
-
-# Plays one game of blackJack and assigns the result of the game and the chip balance
-# to variables game_result and no_chips respectively.
-game_result, no_chips = blackjack.play_one_game(no_chips)
-
-# Display to the screen the result of play_one_game() – game result (value of 3, 1 or 0)
-# and number of chips remaining.
-print(game_result, no_chips)
-
-
-
-print("\n\n-- Program terminating --\n")
-"""
 
 
 
