@@ -19,6 +19,8 @@ import blackjack
  
 '''     TO-DO'''
 #fix display player (stage 2)
+#follow though the sample output to ensure output matches
+#check if i can use f strings
 
 
 """                Functions                """
@@ -66,7 +68,6 @@ def read_file(filename):
 
 #writes the contents of player list in the same format as it was inputed.
 def write_to_file(filename, player_list): #opens file where player data is saved
-    print('writing to file')
     with open(filename, 'w') as output:
         for player in player_list:#loops through all players
             output.write(player[0] + '\n')#writes player name, so it is on a line by itself
@@ -84,11 +85,10 @@ def display_players(player_list):
     print('-                             P  W  L  D   Chips   Score  -')
     print('-----------------------------------------------------------')
     for player in player_list:
-        print(f"{player[0]:<29} {player[1]:<2} {player[2]:<2} {player[3]:<2} {player[4]:<3} {player[5]:<10} {player[6]} ")
+        print(f"{player[0]:<28} {player[1]:>2} {player[2]:>2} {player[3]:>2} {player[4]:>2} {player[5]:>7} {player[6]:>7}  -")
 
         print('-----------------------------------------------------------')
     print('===========================================================')
-    print()
 
 
 
@@ -98,7 +98,9 @@ def find_player(player_list, name):
     for i in range(length):
         if player_list[i][0] == name:
             return i
+    print(f'{name} is not found in player list.\n')
     return -1
+
 
 #updates the plater chip balance. promts user for for the amount of chips they would like to buy (1-100)and updates balance
 #validates the number of chips, displays a message indicating it has been done and an error message if the player is not found
@@ -125,7 +127,7 @@ def buy_player_chips(player_list, name):
 def display_highest_chip_holder(player_list,silent = False):
     length = len(player_list)
     max_val = 0
-    max_index = 0
+    max_index = -1
     for x in range(length):
         if player_list[x][5] > max_val:
             max_val = player_list[x][5]
@@ -204,6 +206,7 @@ def play_blackjack_games(player_list, player_pos):
 
 #returrns a copy of player list in desecnding order of chip balance
 #when two players have the same balance the one with the lower amount of games played appears first
+# when display highest list is called if all equal 0 -1 is returned so any players with a value of 0 wont be included
 def sort_by_chips (player_list):
     temp_list = []
     new_sorted_list = []
@@ -212,8 +215,15 @@ def sort_by_chips (player_list):
 
     while len(temp_list) > 0:
         index = display_highest_chip_holder(temp_list, True)
-        new_sorted_list.append(temp_list[index])
-        temp_list = remove_player(temp_list, temp_list[index][0], True)
+        if index != -1:
+            new_sorted_list.append(temp_list[index])
+            temp_list = remove_player(temp_list, temp_list[index][0], True)
+        elif index == -1: #if all players left on the list have 0 chips the first player in the list gets added
+            new_sorted_list.append(temp_list[0])
+            temp_list = remove_player(temp_list, temp_list[0][0], True)
+
+
+
 
     return new_sorted_list
 
@@ -239,6 +249,7 @@ done = False
 while not done:
     #done = True
     u_input = str(input('\nplease enter choice \n[list, buy, search, high, add, remove, play, chips, quit]: ')).lower()
+    print()
 
     if u_input == 'list':
         print()
@@ -251,10 +262,7 @@ while not done:
 
     elif u_input == 'search':
         index = find_player(player_list, input('please enter player name: '))
-
-        if index == -1:
-            print('Sorry that player does not exist\n')
-        else:
+        if index != -1:
            print('Player name:', player_list[index][0], '\nGames Played:', player_list[index][1], '\nGames won:', player_list[index][2], '\nGames lost:', player_list[index][3], '\nGames drawn:', player_list[index][4], '\nChips:', player_list[index][5], '\nScore:', player_list[index][6])
 
     elif u_input == 'high':
@@ -273,9 +281,8 @@ while not done:
     elif u_input == 'play':
         player_name = input('please enter player name: ')
         index = find_player(player_list, player_name)
-        if index == -1:
-            print(f'{player_name} is not found in player list.\n')
-        else:
+        if index != -1:
+
             play_blackjack_games(player_list, index)
 
     elif u_input == 'chips':
