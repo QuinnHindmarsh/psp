@@ -7,4 +7,4 @@ Johnny Rose
 Gina Linetti
 7 4 0 3 300 15
 Buster Bluth
-3 0 2 1 50 1
+3 0 2 1 100 1
